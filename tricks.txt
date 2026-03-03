@@ -1,0 +1,2 @@
+source myenv/bin/activate
+nohup python3 web_ui.py > web_log.txt &
