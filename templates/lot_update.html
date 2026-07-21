@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Update component lot</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h2>Update component lot {{ lot.id }}</h2>
+        <form method="POST" action="{{ url_for('lot_update', lot_id=lot.id) }}">
+            <label>Type</label>
+            <input type="text" name="type" value="{{ lot.type }}" required>
+            <label>Date received</label>
+            <input type="text" name="date_received" value="{{ lot.date_received }}" required>
+            <label>Date code</label>
+            <input type="text" name="date_code" value="{{ lot.date_code }}" required>
+            <label>Quantity</label>
+            <input type="number" name="quantity" value="{{ lot.quantity }}" required>
+            <button type="submit">Update</button>
+        </form>
+        <a href="{{ url_for('list_lot') }}">Back to list</a>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Bench test list</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h2>List of bench tests</h2>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Board ID</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            {% for test in tests %}
+            <tr>
+                <td>{{ test.id }}</td>
+                <td>{{ test.board_id }}</td>
+                <td>{{ test.test_type }}</td>
+                <td>{{ test.status }}</td>
+                <td>
+                    {% if test.status == 'Running' %}
+                    <a href="{{ url_for('stop_test', test_id=test.id) }}">Stop</a>
+                    {% else %}
+                    <a href="{{ url_for('start_test', test_id=test.id) }}">Start</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <a href="{{ url_for('menu') }}">Return to Menu</a>
+    </div>
+</body>
+
+</html>

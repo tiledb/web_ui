@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Start/Stop bench test</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h2>Start/Stop bench test</h2>
+        {% if message %}
+        <p>{{ message }}</p>
+        {% endif %}
+        <form method="POST" action="{{ url_for('new_test') }}">
+            <label>Board ID</label>
+            <input type="text" name="board_id" required>
+            <label>Test type</label>
+            <select name="test_type" required>
+                <option value="power">Power</option>
+                <option value="signal">Signal</option>
+                <option value="full">Full</option>
+            </select>
+            <button type="submit">Start Test</button>
+        </form>
+        <a href="{{ url_for('menu') }}">Return to Menu</a>
+    </div>
+</body>
+
+</html>

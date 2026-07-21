@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>List assembly batch</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h2>List assembly batch</h2>
+        <form method="POST" action="{{ url_for('list_batch') }}">
+            <label>Please provide status:</label><br>
+            <select name="filter" id="filter" required>
+                <option value="0">Not started</option>
+                <option value="1">Progress</option>
+                <option value="2">Done</option>
+            </select><br>
+            <button type="submit">Search</button>
+        </form>
+        {% if error %}
+        <p>{{ error }}</p>
+        {% endif %}
+        {% if results %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Received date</th>
+                    <th>ID</th>
+                    <th>Version</th>
+                    <th>In ATLAS lab</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in results %}
+                <tr>
+                    <td>{{ row[0] }}</td>
+                    <td><a href="{{ url_for('edit_batch',batch_id=row[1]) }}">{{ row[1] }}</a></td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[3] }}</td>
+                    <td>{{ row[4] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+        <br>
+        <a href="{{ url_for('menu') }}">Return to Menu</a>
+    </div>
+</body>
+
+</html>
+"""

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Assembly batch list</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h2>List / update assembly batch</h2>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Boards</th>
+                <th>Action</th>
+            </tr>
+            {% for batch in batches %}
+            <tr>
+                <td>{{ batch.id }}</td>
+                <td>{{ batch.name }}</td>
+                <td>{{ batch.date }}</td>
+                <td>{{ batch.count }}</td>
+                <td><a href="{{ url_for('batch_update', batch_id=batch.id) }}">Update</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+        <a href="{{ url_for('menu') }}">Return to Menu</a>
+    </div>
+</body>
+
+</html>

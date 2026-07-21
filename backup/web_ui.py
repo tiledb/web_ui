@@ -79,9 +79,7 @@ menu_template = """
         <div class="tab"><a href="{{ url_for('new_batch') }}"><u>Create</u></a></div>
         <div class="tab"><a href="{{ url_for('list_batch') }}"> or <u>list/update</u> assembly batch</a></div>
         <br>
-        <div class="tab"><a href="{{ url_for('def_kintex') }}"><u>Update</u> daughterboard information</a></div>
-        <br>
-        <div class="tab"><a href="{{ url_for('search_db_serial') }}"><u>Search</u> daughterboard by serial or kintex</a></div>
+        <div class="tab"><a href="{{ url_for('def_kintex') }}"><u>Define</u> daughterboard kintex ID</a></div>
         <br>
         <div class="tab"><a href="{{ url_for('new_test') }}"><u>Start/stop</u></a></div>
         <div class="tab"><a href="{{ url_for('list_bench') }}"> or <u>list</u> bench test </a></div>
@@ -731,13 +729,13 @@ new_test_template= """
                 <td><input type="text" name="test_op" value="{{ bench.test_op }}" placeholder="please provide your initials"></td>
                 {% if bench %}
                 <td><select name="test_pass" id="test_pass" required>
-                    <option value="0" {{ "selected" if bench.test_pass==0 else "" }}>Test not valid</option>
-                    <option value="1" {{ "selected" if bench.test_pass==1 else "" }}>Test is valid</option>
+                    <option value="0" {{ "selected" if bench.test_pass==0 else "" }}>No</option>
+                    <option value="1" {{ "selected" if bench.test_pass==1 else "" }}>Yes</option>
                 </select></td>
                 {% endif %}
                 </tr><td>Comment</td></tr>
                 <tr>
-                <td><textarea name="comment" cols="30" rows="3" placeholder="you may leave a note"></textarea></td>
+                <td><textarea name="comment" cols="30" rows="3" placeholder="please leave a note"></textarea></td>
                 </tr>
                 <tr><td>&nbsp;</td></tr>
                 <tr>
@@ -794,7 +792,7 @@ list_bench_template = """
 </head>
 <body>
     <div class="container">
-        <h2>List last 40 passed bench tests</h2>
+        <h2>List last 100 passed bench tests</h2>
         {% if error %}
             <p>{{ error }}</p>
         {% endif %}
@@ -802,201 +800,26 @@ list_bench_template = """
             <table>
                 <thead>
                     <tr>
-                        <th>Test ID</th>
                         <th>Test start (UTC)</th>
                         <th>Test stop (UTC)</th>
                         <th>OP</th>
-                        <th>DB slot1</th>
-                        <th>DB slot2</th>
-                        <th>DB slot3</th>
-                        <th>DB slot4</th>
-                        <th>Status</th>
+                        <th>db_slot1</th>
+                        <th>db_slot2</th>
+                        <th>db_slot3</th>
+                        <th>db_slot4</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for row in results %}
                         <tr>
-                            <td><a href="{{ url_for('list_bench_comments',foreign_id=row[0]) }}">{{ row[0] }}</a></td>
+                            <td>{{ row[0] }}</td>
                             <td>{{ row[1] }}</td>
                             <td>{{ row[2] }}</td>
                             <td>{{ row[3] }}</td>
                             <td>{{ row[4] }}</td>
                             <td>{{ row[5] }}</td>
                             <td>{{ row[6] }}</td>
-                            <td>{{ row[7] }}</td>
-                            <td>{{ row[8] }}</td>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% endif %}
-        <br>
-        <a href="{{ url_for('menu') }}"> Return to Menu</a>
-    </div>
-</body>
-</html>
-"""
-
-# List daughterboard comments
-list_comments_template = """
-<!DOCTYPE html>
-<html>
-<head>
-    <title>List comments</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f0f0f0; }
-        .container { width: 800px; margin: 50px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        input[type="text"] { width: 100%; padding: 8px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; }
-        button { background-color: #4CAF50; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
-        button:hover { background-color: #45a049; }
-        a { text-decoration: none; color: #4CAF50; display: inline-block; margin-top: 0px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 8px; border: 1px solid #ddd; text-align: left; }
-        th { background-color: #f2f2f2; }
-        p { color: red; }
-        select {width: 100%; padding: 8px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px;}
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h2>Information on daughterboard {{ foreign_id }}</h2>
-        {% if error %}
-            <p>{{ error }}</p>
-        {% endif %}
-        {% if results %}
-            <table>
-                <tr>
-                <td>Kintex A: {{ results[0].kintex_a_id }}</td>
-                <td>Kintex B: {{ results[0].kintex_b_id }}</td>
-                <td>Batch: {{ results[0].batch_id }}</td>
-                <td>Status: {{ results[0].db_status }}</td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                <td>E test: {{ results[0].e_test }}</td>
-                <td>P test: {{ results[0].p_test }}</td>
-                <td>Burned in: {{ results[0].burn_in_stop }}</td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                <td>Link A0: {{ results[0].a0 }}</td>
-                <td>Link A1: {{ results[0].a1 }}</td>
-                <td>Link B0: {{ results[0].b0 }}</td>
-                <td>Link B1: {{ results[0].b1 }}</td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                <td>KIN: {{ results[0].kin_lot }}</td>
-                <td>PRO: {{ results[0].pro_lot }}</td>
-                <td>INA: {{ results[0].ina_lot }}</td>
-                <td>LTM: {{ results[0].ltm_lot }}</td>
-                </tr>
-                <tr>
-                <td>MOS: {{ results[0].mos_lot }}</td>
-                <td>OP4: {{ results[0].op4_lot }}</td>
-                <td>OK4: {{ results[0].ok4_lot }}</td>
-                <td>OK1: {{ results[0].ok1_lot }}</td>
-                </tr>
-                <tr>
-                <td>MEM: {{ results[0].mem_lot }}</td>
-                <td>SFP: {{ results[0].sfp_lot }}</td>
-                </tr>
-            </table>
-            <br>
-            <h3>Comments:</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Date (UTC)</th>
-                        <th>Operator</th>
-                        <th>Comment</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in results %}
-                    {% if row.tstamp != none or row.op != none or row.note != none %}
-                        <tr>
-                            <td>{{ row.tstamp }}</td>
-                            <td>{{ row.op }}</td>
-                            <td style="white-space: pre-line;">{{ row.note }}</td>
-                        </tr>
-                    {% endif %}
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% endif %}
-        <br>
-        <a href="{{ url_for('menu') }}"> Return to Menu</a>
-    </div>
-</body>
-</html>
-"""
-
-# List benchtest comments
-list_bench_comments_template = """
-<!DOCTYPE html>
-<html>
-<head>
-    <title>List comments</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f0f0f0; }
-        .container { width: 800px; margin: 50px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        input[type="text"] { width: 100%; padding: 8px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; }
-        button { background-color: #4CAF50; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
-        button:hover { background-color: #45a049; }
-        a { text-decoration: none; color: #4CAF50; display: inline-block; margin-top: 0px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 8px; border: 1px solid #ddd; text-align: left; }
-        th { background-color: #f2f2f2; }
-        p { color: red; }
-        select {width: 100%; padding: 8px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px;}
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h2>Information on benchtest {{ foreign_id }}</h2>
-        {% if error %}
-            <p>{{ error }}</p>
-        {% endif %}
-        {% if results %}
-            <table>
-                <tr>
-                <td>Test start (UTC): {{ results[0].test_start }}</td>
-                <td>Test stop (UTC): {{ results[0].test_stop }}</td>
-                <td>Operator: {{ results[0].test_op }}</td>
-                <td>Status: {{ results[0].test_pass }}</td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                <td>DB slot1: {{ results[0].db_slot1 }}</td>
-                <td>DB slot2: {{ results[0].db_slot2 }}</td>
-                <td>DB slot3: {{ results[0].db_slot3 }}</td>
-                <td>DB slot4: {{ results[0].db_slot4 }}</td>
-                </tr>
-            </table>
-            <br>
-            <h3>Comments:</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Date (UTC)</th>
-                        <th>Operator</th>
-                        <th>Comment</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in results %}
-                    {% if row.tstamp != none or row.op != none or row.note != none %}
-                        <tr>
-                            <td>{{ row.tstamp }}</td>
-                            <td>{{ row.op }}</td>
-                            <td style="white-space: pre-line;">{{ row.note }}</td>
-                        </tr>
-                    {% endif %}
                     {% endfor %}
                 </tbody>
             </table>
@@ -1013,7 +836,7 @@ def_kintex_template= """
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Update daughterboard</title>
+    <title>Define kintex ID</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f0f0f0; }
         .container { width: 550px; margin: 50px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
@@ -1029,7 +852,7 @@ def_kintex_template= """
 </head>
 <body>
     <div class="container">
-        <h2>Update daughterboard (only non empty fields)</h2>
+        <h2>Define kintex ID</h2>
         {% if error %}
             <p style="color:red;">{{ error }}</p>
         {% else %}
@@ -1042,131 +865,16 @@ def_kintex_template= """
                 <td><label>Board serial#</label></td>
                 <td><label>Kintex A ID</label></td>
                 <td><label>Kintex B ID</label></td>
-                <td></td>
                 </tr>
                 <tr>
                 <td><input type="number" name="id"></td>
                 <td><input type="text" name="kintex_a"></td>
                 <td><input type="text" name="kintex_b"></td>
-                <td></td>
-                </tr>
-                <tr>
-                <td><label>Electric test</label></td>
-                <td><label>Program test</label></td>
-                <td><label>Burned in</label></td>
-                <td></td>
-                </tr>
-                <td>
-                <select name="e_test" id="e_test">
-                    <option value=""></option>
-                    <option value="1">Passed</option>
-                    <option value="0">Failed</option>
-                </select>
-                </td>
-                <td>
-                <select name="p_test" id="p_test">
-                    <option value=""></option>
-                    <option value="1">Passed</option>
-                    <option value="0">Failed</option>
-                </select>
-                </td>
-                <td>
-                <select name="burn_in" id="burn_in">
-                    <option value=""></option>
-                    <option value="1">Burned in</option>
-                </select>
-                </td>
-                <tr>
-                <td><label>Link A0</label></td>
-                <td><label>Link A1</label></td>
-                <td><label>Link B0</label></td>
-                <td><label>Link B1</label></td>
-                </tr>
-                <tr>
-                <td><input type="text" name="a0"></td>
-                <td><input type="text" name="a1"></td>
-                <td><input type="text" name="b0"></td>
-                <td><input type="text" name="b1"></td>
-                <td></td>
-                </tr>
-                <tr>
-                <td>Comment</td>
-                </tr>
-                <tr>
-                <td style="vertical-align:top" colspan="3" rowspan="3">
-                <textarea name="comment" cols="30" rows="3" placeholder=""></textarea></td>
                 </tr>
                 </tbody></table>
                 <button type="submit">Save</button>
             </form>
         {% endif %}
-        <a href="{{ url_for('menu') }}">Return to Menu</a>
-    </div>
-</body>
-</html>
-"""
-
-# Search db serial
-search_db_serial_template = """
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Search daughterboards by serial number</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f0f0f0; }
-        .container { width: 850px; margin: 50px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        input[type="text"] { width: 60%; padding: 8px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; }
-        button { background-color: #4CAF50; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
-        button:hover { background-color: #45a049; }
-        a { text-decoration: none; color: #4CAF50; display: inline-block; margin-top: 0px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 8px; border: 1px solid #ddd; text-align: left; }
-        th { background-color: #f2f2f2; }
-        p { color: red; }
-        select {width: 100%; padding: 8px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px;}
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h2>Search daughterboards by serial or kintex</h2>
-        <form method="POST" action="{{ url_for('search_db_serial') }}">
-            <label>Please provide some serial or kintex digits:</label><br>
-            <input type="text" name="filter" id="filter">
-            <br>
-            <button type="submit">Search</button>
-        </form>
-        {% if error %}
-            <p>{{ error }}</p>
-        {% endif %}
-        {% if results %}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Board serial#</th>
-                        <th>Kintex A ID</th>
-                        <th>Kintex B ID</th>
-                        <th>DB status</th>
-                        <th>Test ID</th>
-                        <th>Test status</th>
-                        <th>Test date (UTC)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in results %}
-                        <tr>
-                            <td><a href="{{ url_for('list_comments',foreign_id=row[0]) }}">{{ row[0] }}</a></td>
-                            <td>{{ row[1] }}</td>
-                            <td>{{ row[2] }}</td>
-                            <td>{{ row[3] }}</td>
-                            <td>{{ row[4] }}</td>
-                            <td>{{ row[5] }}</td>
-                            <td>{{ row[6] }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% endif %}
-        <br>
         <a href="{{ url_for('menu') }}">Return to Menu</a>
     </div>
 </body>
@@ -1600,7 +1308,7 @@ def list_bench():
     if conn:
         try:
             cursor = conn.cursor()
-            query = "SELECT id,test_start,test_stop,test_op,db_slot1,db_slot2,db_slot3,db_slot4,test_pass FROM benchtest where test_pass>0 order by test_stop desc limit 40"
+            query = "SELECT test_start,test_stop,test_op,db_slot1,db_slot2,db_slot3,db_slot4 FROM benchtest where test_pass=1 order by test_stop desc limit 100"
             cursor.execute(query)
             results = cursor.fetchall()
             if not results:
@@ -1614,58 +1322,6 @@ def list_bench():
     else:
         error = "Database connection error."
     return render_template_string(list_bench_template, error=error, results=results)
-
-# List daughterboard comments
-@app.route('/list_comments/<foreign_id>', methods=['GET', 'POST'])
-def list_comments(foreign_id):
-    if not session.get('logged_in'):
-        return redirect(url_for('login'))
-    error = None
-    results = None
-    conn = get_db_connection()
-    if conn:
-        try:
-            cursor = conn.cursor(dictionary=True)
-            query = "SELECT * from daughterboard t1 left join comment t2 on t1.serial_no=t2.foreign_id and foreign_typ=3 where t1.serial_no=%s order by tstamp desc"
-            cursor.execute(query,(foreign_id,))
-            results = cursor.fetchall()
-            if not results:
-                error = "No info found!"
-                return render_template_string(list_comments_template, error=error)
-        except Error as e:
-            error = "Error executing query: " + str(e)
-        finally:
-            cursor.close()
-            conn.close()
-    else:
-        error = "Database connection error."
-    return render_template_string(list_comments_template, error=error, results=results, foreign_id=foreign_id)
-
-# List benchtest comments
-@app.route('/list_bench_comments/<foreign_id>', methods=['GET', 'POST'])
-def list_bench_comments(foreign_id):
-    if not session.get('logged_in'):
-        return redirect(url_for('login'))
-    error = None
-    results = None
-    conn = get_db_connection()
-    if conn:
-        try:
-            cursor = conn.cursor(dictionary=True)
-            query = "SELECT * from benchtest t1 left join comment t2 on t1.id=t2.foreign_id and foreign_typ=4 where t1.id=%s order by tstamp desc"
-            cursor.execute(query,(foreign_id,))
-            results = cursor.fetchall()
-            if not results:
-                error = "No info found!"
-                return render_template_string(list_bench_comments_template, error=error)
-        except Error as e:
-            error = "Error executing query: " + str(e)
-        finally:
-            cursor.close()
-            conn.close()
-    else:
-        error = "Database connection error."
-    return render_template_string(list_bench_comments_template, error=error, results=results, foreign_id=foreign_id)
 
 @app.route('/new_test', methods=['GET', 'POST'])
 def new_test():
@@ -1684,11 +1340,6 @@ def new_test():
                 cursor = conn.cursor()
 
                 if request.form.get('bench_id') is None:
-                    cursor.execute('select not exists (select 1 from benchtest where test_stop is null)')
-                    status = cursor.fetchone()
-                    if not status[0]:
-                        raise Error("Unstopped tests, please return to main menu.")
-                    
                     args = (
                         request.form.get('db_slot1') or None,
                         request.form.get('db_slot2') or None,
@@ -1712,7 +1363,7 @@ def new_test():
                         request.form.get('comment') or None,
                         is_ok
                     )
-                    if args[3] is None:
+                    if args[3] is None or args[5] is None:
                         conn.rollback()
                         raise Error("OP initials and a comment must be provided")
                     status=cursor.callproc('update_benchtest', args)
@@ -1773,80 +1424,22 @@ def def_kintex():
                     request.form.get('id') or None,
                     request.form.get('kintex_a') or None,
                     request.form.get('kintex_b') or None,
-                    request.form.get('e_test') or None,
-                    request.form.get('p_test') or None,
-                    request.form.get('burn_in') or None,
-                    request.form.get('a0') or None,
-                    request.form.get('a1') or None,
-                    request.form.get('b0') or None,
-                    request.form.get('b1') or None,
-                    request.form.get('comment') or None,
                     is_ok
                 )
-                if args[0] is None:
-                    raise Error("serial# must be provided")
-                status=cursor.callproc('update_kintex', args)
+                if args[0] is None or args[1] is None or args[2] is None:
+                    raise Error("all fields must be provided")
+                status=cursor.callproc('define_kintex', args)
                 print(status)
                 conn.commit()
                 mess = "Data submitted successfully "+datetime.datetime.now().ctime()+" (UTC)"
             except Error as e:
-                error = "Error, could not update daughterboard information: " + str(e)
+                error = "Error new benchtest: " + str(e)
             finally:
                 cursor.close()
         else:
             error = "Database connection error."
 
     return render_template_string(def_kintex_template, mess=mess, error=error)
-
-# Search db serial
-@app.route('/search_db_serial', methods=['GET', 'POST'])
-def search_db_serial():
-    if not session.get('logged_in'):
-        return redirect(url_for('login'))
-    error = None
-    results = None
-    if request.method == 'POST':
-        filter_value = request.form.get('filter')
-        if not filter_value or filter_value.strip() == "":
-            error = "Please provide a valid filter condition."
-        else:
-            conn = get_db_connection()
-            if conn:
-                try:
-                    cursor = conn.cursor()
-                    query="""SELECT serial_no,kintex_a_id, kintex_b_id,
-                    db_status, id, test_pass, test_stop FROM (
-                        SELECT
-                            d.serial_no,
-                            kintex_a_id, kintex_b_id, db_status,
-                            b.id, test_pass, b.test_stop,
-                            ROW_NUMBER() OVER (
-                                PARTITION BY d.serial_no
-                                ORDER BY test_pass DESC, b.test_stop DESC, b.id DESC
-                            ) AS rn
-                        FROM daughterboard AS d
-                        LEFT JOIN benchtest AS b
-                        ON (d.serial_no = b.db_slot1
-                        OR d.serial_no = b.db_slot2
-                        OR d.serial_no = b.db_slot3
-                        OR d.serial_no = b.db_slot4)
-                        where d.serial_no like %s or kintex_a_id like %s or kintex_b_id like %s
-                    ) AS x
-                    WHERE rn = 1;"""
-                    like_param = f"%{filter_value}%"
-                    cursor.execute(query, (like_param,like_param,like_param))
-                    results = cursor.fetchall()
-                    if not results:
-                        error = "No assembly batch found!"
-                        return render_template_string(search_db_serial_template, error=error)
-                except Error as e:
-                    error = "Error executing query: " + str(e)
-                finally:
-                    cursor.close()
-                    conn.close()
-            else:
-                error = "Database connection error."
-    return render_template_string(search_db_serial_template, error=error, results=results)
 
 # Logout Route
 @app.route('/logout')

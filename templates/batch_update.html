@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Update assembly batch</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h2>Edit assembly batch: {{ batch.id }}</h2>
+        {% if error %}
+        <p style="color:red;">{{ error }}</p>
+        {% else %}
+        {% if mess %}
+        <p>{{ mess }}</p>
+        {% endif %}
+        <form method="post">
+            <label>Received: {{ batch.received }}</label><br>
+            <label>Received by: {{ batch.received_by }}</label><br>
+            <label>Version: {{ batch.version }}</label><br><br>
+            <table style="border: 1px solid black; padding: 5px">
+                <tbody>
+                    <tr>
+                        <td>In ATLAS lab</td>
+                        <td><select name="atlas_lab" id="atlas_lab" required>
+                                <option value="0" {{ "selected" if batch.atlas_lab==0 else "" }}>No</option>
+                                <option value="1" {{ "selected" if batch.atlas_lab==1 else "" }}>Yes</option>
+                            </select></td>
+                        <td width="5%"></td>
+                        <td>Comment</td>
+                        <td style="vertical-align:top" rowspan="3">
+                            <textarea name="comment" cols="30" rows="3" placeholder="please leave a note"></textarea>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Status</td>
+                        <td><select name="status" id="status" required>
+                                <option value="0" {{ "selected" if batch.status==0 else "" }}>Not started</option>
+                                <option value="1" {{ "selected" if batch.status==1 else "" }}>Progress</option>
+                                <option value="2" {{ "selected" if batch.status==2 else "" }}>Done</option>
+                            </select></td>
+                    </tr>
+
+                    <tr>
+                        <td><label>Quantity</label></td>
+                        <td><input type="number" name="quantity" value={{ batch.quantity }}></td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="3"><a class=button href="{{ url_for('list_dboard',batch_id=batch.id) }}">List
+                                daughterboards</a></td>
+                        <td>Operator</td>
+                        <td><textarea name="op" rows="1" cols="30"
+                                placeholder="please provide your initials"></textarea></td>
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="3"><a class=button href="{{ url_for('new_dboard',batch_id=batch.id) }}">Define
+                                daughterboard</a></td>
+                        <td>History</td>
+                        <td rowspan="3">
+                            <div>
+                                <select name="comments" id="comments" style="width: 210px;">
+                                    {% for row in history %}
+                                    <option> {{ row.item }} </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+            <button type="submit">Save</button>
+        </form>
+        {% endif %}
+        <a href="{{ url_for('menu') }}">Return to Menu</a>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Menu</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h2>Choose operation</h2>
+        <div class="tab"><a href="{{ url_for('new_lot') }}"><u>Create</u></a></div>
+        <div class="tab"><a href="{{ url_for('list_lot') }}"> or <u>list/update</u> component lot</a></div>
+        <br>
+        <div class="tab"><a href="{{ url_for('new_batch') }}"><u>Create</u></a></div>
+        <div class="tab"><a href="{{ url_for('list_batch') }}"> or <u>list/update</u> assembly batch</a></div>
+        <br>
+        <div class="tab"><a href="{{ url_for('def_kintex') }}"><u>Define</u> daughterboard kintex ID</a></div>
+        <br>
+        <div class="tab"><a href="{{ url_for('new_test') }}"><u>Start/stop</u></a></div>
+        <div class="tab"><a href="{{ url_for('list_bench') }}"> or <u>list</u> bench test </a></div>
+        <br><br>
+        <form method="GET" action="{{ url_for('logout') }}">
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+</body>
+
+</html>

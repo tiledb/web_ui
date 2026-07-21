@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Create component lot</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h2>Create component lot:</h2>
+        {% if message %}
+        <p>{{ message }}</p>
+        {% endif %}
+        <form method="POST" action="{{ url_for('new_lot') }}">
+            <label>Type</label><br>
+            <select name="text1" id="text1" required>
+                <option value="KIN">KIN</option>
+                <option value="PRO">PRO</option>
+                <option value="GBT">GBT</option>
+                <option value="INA">INA</option>
+                <option value="LTM">LTM</option>
+                <option value="MOS">MOS</option>
+                <option value="OP4">OP4</option>
+                <option value="OK4">OK4</option>
+                <option value="OK1">OK1</option>
+                <option value="MEM">MEM</option>
+                <option value="SFP">SFP</option>
+            </select><br>
+            <label>Date received (YYYY-MM-DD)</label>
+            <input type="text" name="text2" required>
+            <label>Manufacture date code</label>
+            <input type="text" name="text3" required>
+            <label>Quantity</label>
+            <input type="number" name="int1" required>
+            <button type="submit">Create new</button>
+        </form>
+        <a href="{{ url_for('menu') }}">Return to Menu</a>
+    </div>
+</body>
+
+</html>

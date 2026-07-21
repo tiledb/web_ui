@@ -1,0 +1,11 @@
+
+body { font-family: Arial, sans-serif; background-color: #f0f0f0; }
+.container { width: 670px; margin: 50px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+input[type="text"] { width: 100%; padding: 8px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; }
+input[type="number"] { width: 95px; padding: 2px; margin: 3px 0; border: 1px solid #ccc; border-radius: 4px; }
+button { background-color: #4CAF50; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+button:hover { background-color: #45a049; }
+a { text-decoration: none; color: #4CAF50; display: inline-block; margin-top: 10px; }
+p { color: green; }
+a.button { background-color: #4CAF50; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+textarea { resize: none; }
